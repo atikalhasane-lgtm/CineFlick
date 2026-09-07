@@ -85,8 +85,7 @@ document.getElementById('videoSource').src=video;
 document.getElementById('myVideo').poster=img;
 document.getElementById('myVideo').load();
 document.getElementById('modal').classList.add('active');
-setTimeout(()=>{document.getElementById('myVideo').play();},500);
-}
+<video id="myVideo" controls playsinline style="width:100%;height:100%">
 function closeModal(){
 document.getElementById('modal').classList.remove('active');
 document.getElementById('myVideo').pause();
