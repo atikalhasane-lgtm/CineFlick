@@ -1,24 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CineFlick - Your Movie Hub</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineFlick</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0f172a;color:white;font-family:Arial}
 header{display:flex;justify-content:space-between;padding:15px;background:#1e293b;position:sticky;top:0;z-index:10}
 .logo{font-size:24px;font-weight:bold}.logo span{color:#3b82f6}
 .hero{background:linear-gradient(135deg,#4338ca,#a21caf);padding:40px 20px;text-align:center}
-.filters{display:flex;gap:10px;padding:15px;overflow-x:auto;background:#0f172a;border-bottom:1px solid #334155}
+.filters{display:flex;gap:10px;padding:15px;overflow-x:auto;background:#0f172a}
 .filters button{padding:8px 18px;border-radius:20px;border:none;background:#1e293b;color:white;cursor:pointer;white-space:nowrap}
 .filters button.active{background:#3b82f6}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
-.card{background:#1e293b;border-radius:12px;overflow:hidden;cursor:pointer;transition:0.2s}
-.card:hover{transform:scale(1.03)}
+.card{background:#1e293b;border-radius:12px;overflow:hidden;cursor:pointer}
 .card img{width:100%;height:200px;object-fit:cover}
 .card-info{padding:10px}
-.card-info h3{font-size:14px}.card-info p{font-size:11px;opacity:0.6}
 #modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:100;overflow-y:auto}
 #modal.active{display:block}
 .top-bar{display:flex;justify-content:space-between;padding:15px;background:#000}
@@ -26,12 +23,12 @@ header{display:flex;justify-content:space-between;padding:15px;background:#1e293
 .video-wrap{width:100%;background:black;aspect-ratio:16/9}
 .video-wrap video{width:100%;height:100%}
 .modal-content{padding:20px}
-.play-btn{width:100%;padding:14px;background:#3b82f6;border:none;color:white;border-radius:10px;margin-top:15px;font-size:16px;font-weight:bold;cursor:pointer}
+.play-btn{width:100%;padding:14px;background:#3b82f6;border:none;color:white;border-radius:10px;margin-top:15px;font-size:16px;font-weight:bold}
 </style>
 </head>
 <body>
 <header><div class="logo">Cine<span>Flick</span></div><div>BETA</div></header>
-<div class="hero"><h1>Watch Full Movies</h1><p>No YouTube - Direct Player</p></div>
+<div class="hero"><h1>Watch Full Movies</h1><p>Direct Player - With Sound</p></div>
 <div class="filters">
 <button class="active" onclick="filterMovies('all',this)">All</button>
 <button onclick="filterMovies('anime',this)">Anime</button>
@@ -41,60 +38,48 @@ header{display:flex;justify-content:space-between;padding:15px;background:#1e293
 <div class="grid" id="movieGrid"></div>
 
 <div id="modal">
-<div class="top-bar"><span id="modalTitle" style="font-weight:bold"></span><span class="close" onclick="closeModal()">&times;</span></div>
+<div class="top-bar"><span id="modalTitle"></span><span class="close" onclick="closeModal()">&times;</span></div>
 <div class="video-wrap">
-<video id="myVideo" controls controlsList="nodownload" poster="">
-<source id="videoSource" src="" type="video/mp4">
-</video>
+<video id="myVideo" controls playsinline preload="auto"><source id="videoSource" src="" type="video/mp4"></video>
 </div>
 <div class="modal-content">
 <h2 id="mTitle"></h2>
-<p id="modalCat" style="opacity:0.6;font-size:13px;margin:5px 0"></p>
-<p style="margin-top:10px;font-size:14px;line-height:1.5">🎬 Now Playing on CineFlick. Full HD. No Ads.</p>
-<button class="play-btn" onclick="let v=document.getElementById('myVideo'); v.muted=false; v.volume=1; v.play()">▶️ Play With Sound</button>
-<p style="margin-top:20px;font-size:12px;opacity:0.5">Tip: তোমার নিজের মুভি লিংক বসাতে নিচের movies লিস্টে yt এর জায়গায় তোমার Drive লিংক দাও।</p>
+<p id="modalCat" style="opacity:0.6;font-size:13px"></p>
+<button class="play-btn" onclick="let v=document.getElementById('myVideo'); v.muted=false; v.volume=1; v.play();">🔊 Play With Sound</button>
 </div>
 </div>
 
 <script>
 const movies=[
-{name:"Avengers",cat:"hollywood",img:"https://images.unsplash.com/photo-1626379616459-b2ce1d9decbc?w=400",video:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"}{name:"Demon Slayer",cat:"anime",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",video:"https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4"},
-{name:"Solo Leveling",cat:"anime",img:"https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400",video:"https://test-videos.co.uk/vids/sintel/mp4/h264/720/Sintel_720_10s_1MB.mp4"},
-{name:"Deadpool",cat:"hollywood",img:"https://images.unsplash.com/photo-1635805733572-1f3c9b4747a7?w=400",video:"https://test-videos.co.uk/vids/jellyfish/mp4/h264/720/Jellyfish_720_10s_1MB.mp4"},
-{name:"Squid Game",cat:"kdrama",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400",video:"https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4"},
-{name:"Attack on Titan",cat:"anime",img:"https://images.unsplash.com/photo-1601850494422-3cf14624b0b3?w=400",video:"https://test-videos.co.uk/vids/sintel/mp4/h264/720/Sintel_720_10s_1MB.mp4"},
-{name:"Avengers",cat:"hollywood",img:"https://images.unsplash.com/photo-1626379616459-b2ce1d9decbc?w=400",video:"https://test-videos.co.uk/vids/jellyfish/mp4/h264/720/Jellyfish_720_10s_1MB.mp4"}
+{name:"Big Buck Bunny",cat:"anime",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",video:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"},
+{name:"Elephant Dream",cat:"anime",img:"https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400",video:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"},
+{name:"For Bigger Blazes",cat:"hollywood",img:"https://images.unsplash.com/photo-1635805733572-1f3c9b4747a7?w=400",video:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"},
+{name:"Squid Game",cat:"kdrama",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400",video:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"},
+{name:"Attack on Titan",cat:"anime",img:"https://images.unsplash.com/photo-1601850494422-3cf14624b0b3?w=400",video:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"},
+{name:"Avengers Demo",cat:"hollywood",img:"https://images.unsplash.com/photo-1626379616459-b2ce1d9decbc?w=400",video:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"}
 ];
-
 function render(list){
-document.getElementById('movieGrid').innerHTML=list.map(m=>`
-<div class="card" onclick="openModal('${m.name}','${m.cat}','${m.img}','${m.video}')">
-<img src="${m.img}"><div class="card-info"><h3>${m.name}</h3><p>${m.cat}</p></div>
-</div>`).join('');
+document.getElementById('movieGrid').innerHTML=list.map(m=>`<div class="card" onclick="openModal('${m.name}','${m.cat}','${m.img}','${m.video}')"><img src="${m.img}"><div class="card-info"><h3>${m.name}</h3><p>${m.cat}</p></div></div>`).join('');
 }
 function filterMovies(cat,btn){
-document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
+document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
 if(cat=='all')render(movies);else render(movies.filter(m=>m.cat==cat));
 }
 function openModal(name,cat,img,video){
 document.getElementById('mTitle').innerText=name;
 document.getElementById('modalTitle').innerText=name;
 document.getElementById('modalCat').innerText=cat;
-document.getElementById('videoSource').src=video;
-document.getElementById('myVideo').poster=img;
 let v=document.getElementById('myVideo');
-v.muted=false;
-v.volume=1;
+document.getElementById('videoSource').src=video;
+v.muted=false; v.volume=1;
 v.load();
 document.getElementById('modal').classList.add('active');
-  }
+}
 function closeModal(){
-document.getElementById('modal').classList.remove('active');
-document.getElementById('myVideo').pause();
-document.getElementById('videoSource').src='';
+let v=document.getElementById('myVideo');
+v.pause(); document.getElementById('modal').classList.remove('active');
 }
 render(movies);
 </script>
 </body>
-  </html>
+</html>
