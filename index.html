@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CineFlick</title>
+<link rel="manifest" href='data:application/json;base64,eyJuYW1lIjoiQ2luZUZsaWNrIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJ0aGVtZV9jb2xvciI6IiMwZjE3MmEifQ=='>
+<meta name="theme-color" content="#0f172a">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0f172a;color:white;font-family:Arial}
 header{display:flex;justify-content:space-between;padding:15px;background:#1e293b;position:sticky;top:0;z-index:10}
 .logo{font-size:24px;font-weight:bold}.logo span{color:#3b82f6}
 .hero{background:linear-gradient(135deg,#4338ca,#a21caf);padding:40px 20px;text-align:center}
-.filters{display:flex;gap:10px;padding:15px;overflow-x:auto;background:#0f172a}
-.filters button{padding:8px 18px;border-radius:20px;border:none;background:#1e293b;color:white;cursor:pointer;white-space:nowrap}
+.filters{display:flex;gap:10px;padding:15px;overflow-x:auto}
+.filters button{padding:8px 18px;border-radius:20px;border:none;background:#1e293b;color:white;cursor:pointer}
 .filters button.active{background:#3b82f6}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px}
 .card{background:#1e293b;border-radius:12px;overflow:hidden;cursor:pointer}
@@ -27,30 +30,34 @@ header{display:flex;justify-content:space-between;padding:15px;background:#1e293
 </style>
 </head>
 <body>
-<header><div class="logo">Cine<span>Flick</span></div><div>BETA</div></header>
-<div class="hero"><h1>Watch Full Movies</h1><p>Direct Player - With Sound</p></div>
+<header><div class="logo">Cine<span>Flick</span></div><div>APP</div></header>
+<div class="hero"><h1>CineFlick App</h1><p>Click Movie = Play With Sound 🔊</p></div>
 <div class="filters">
 <button class="active" onclick="filterMovies('all',this)">All</button>
 <button onclick="filterMovies('anime',this)">Anime</button>
 <button onclick="filterMovies('hollywood',this)">Hollywood</button>
-<button onclick="filterMovies('kdrama',this)">K-Drama</button>
 </div>
 <div class="grid" id="movieGrid"></div>
-
 <div id="modal">
 <div class="top-bar"><span id="modalTitle"></span><span class="close" onclick="closeModal()">&times;</span></div>
 <div class="video-wrap">
-<video id="myVideo" controls playsinline preload="auto"><source id="videoSource" src="" type="video/mp4"></video>
+<video id="myVideo" controls playsinline><source id="videoSource" src="" type="video/mp4"></video>
 </div>
 <div class="modal-content">
 <h2 id="mTitle"></h2>
-<p id="modalCat" style="opacity:0.6;font-size:13px"></p>
-<button class="play-btn" onclick="let v=document.getElementById('myVideo'); v.muted=false; v.volume=1; v.play();">▶️ Play With watch</button>
+<p id="modalCat" style="opacity:0.6"></p>
+<button class="play-btn" onclick="let v=document.getElementById('myVideo'); v.muted=false; v.volume=1; v.play();">🔊 Play With Sound</button>
 </div>
 </div>
 <script>
 const movies=[
 {name:"Attack on Titan",cat:"anime",img:"https://images.unsplash.com/photo-1601850494422-3cf14624b0b3?w=400",video:"https://www.w3schools.com/html/mov_bbb.mp4"},
+{name:"Solo Leveling",cat:"anime",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",video:"https://www.w3schools.com/html/mov_bbb.mp4"},
+{name:"Demon Slayer",cat:"anime",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",video:"https://www.w3schools.com/html/movie.mp4"},
+{name:"Avengers",cat:"hollywood",img:"https://images.unsplash.com/photo-1635805733572-1f3c9b4747a7?w=400",video:"https://www.w3schools.com/html/mov_bbb.mp4"},
+{name:"Squid Game",cat:"hollywood",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400",video:"https://www.w3schools.com/html/movie.mp4"},
+{name:"Deadpool",cat:"hollywood",img:"https://images.unsplash.com/photo-1626379616459-b2ce1d9decbc?w=400",video:"https://www.w3schools.com/html/mov_bbb.mp4"}
+];
 function render(list){
 document.getElementById('movieGrid').innerHTML=list.map(m=>`<div class="card" onclick="openModal('${m.name}','${m.cat}','${m.img}','${m.video}')"><img src="${m.img}"><div class="card-info"><h3>${m.name}</h3><p>${m.cat}</p></div></div>`).join('');
 }
@@ -64,14 +71,10 @@ document.getElementById('modalTitle').innerText=name;
 document.getElementById('modalCat').innerText=cat;
 let v=document.getElementById('myVideo');
 document.getElementById('videoSource').src=video;
-v.muted=false; v.volume=1;
-v.load();
+v.muted=false; v.volume=1; v.load();
 document.getElementById('modal').classList.add('active');
 }
-function closeModal(){
-let v=document.getElementById('myVideo');
-v.pause(); document.getElementById('modal').classList.remove('active');
-}
+function closeModal(){document.getElementById('myVideo').pause(); document.getElementById('modal').classList.remove('active');}
 render(movies);
 </script>
 </body>
