@@ -1,85 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CineFlick</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.png">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family: sans-serif;}
-body{background:#0f0f0f;color:#fff;padding-bottom:80px;}
-header{padding:15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#0f0f0f;z-index:10;}
-.logo{font-size:28px;font-weight:800;} .logo span{color:#e50914;}
-.searchBox{margin:10px 15px;background:#222;border-radius:12px;padding:12px 15px;display:flex;align-items:center;gap:10px;}
-.searchBox input{background:transparent;border:none;outline:none;color:#fff;width:100%;font-size:16px;}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:15px;}
-.card{background:#1c1c1c;border-radius:12px;overflow:hidden;position:relative;}
-.card img{width:100%;height:210px;object-fit:cover;}
-.card h4{padding:8px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.card p{padding:0 8px 8px;color:#aaa;font-size:12px;}
-.fav{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.page{display:none;padding:15px;} .active{display:block;}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #333;}
-.bottom div{text-align:center;color:#777;font-size:12px;cursor:pointer;} .bottom div.bActive{color:#e50914;}
-.btn{background:#e50914;border:none;color:#fff;padding:12px;border-radius:8px;width:100%;margin-top:10px;font-size:16px;}
-input.input{width:100%;padding:12px;background:#222;border:1px solid #333;border-radius:8px;color:#fff;margin-top:10px;}
-.settingItem{background:#1c1c1c;padding:15px;border-radius:10px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
-</style>
-</head>
-<body>
-
-<header>
-<div class="logo">Cine<span>Flick</span></div>
-<div onclick="openLogin()" style="width:38px;height:38px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;" id="profileIcon">👤</div>
-</header>
-
-<!-- HOME -->
-<div id="homePage" class="page active">
-<div class="searchBox">🔍 <input id="searchInput" oninput="searchMovies(this.value)" placeholder="Search movies..."></div>
-<div class="grid" id="movieGrid"></div>
-</div>
-
-<!-- SEARCH -->
-<div id="searchPage" class="page">
-<div class="searchBox">🔍 <input id="searchInput2" oninput="searchMovies(this.value)" placeholder="Search movies, shows..."></div>
-<div style="display:flex;gap:8px;overflow:auto;padding:10px 0;"><button onclick="filterCat('All')" class="catBtn">All</button><button onclick="filterCat('Action')">Action</button><button onclick="filterCat('Sci-Fi')">Sci-Fi</button><button onclick="filterCat('Thriller')">Thriller</button></div>
-<div class="grid" id="searchGrid"></div>
-</div>
-
-<!-- FAVOURITE -->
-<div id="favPage" class="page"><h2>Favourite ❤️</h2><div class="grid" id="favGrid"></div></div>
-
-<!-- SETTINGS -->
-<div id="settingsPage" class="page">
-<h2>Settings</h2>
-<div class="settingItem"><span>👤 <b id="userNameShow">Guest</b></span><span onclick="openLogin()" style="color:#e50914;cursor:pointer;">Login</span></div>
-<div class="settingItem"><span>Dark Mode</span><span>✅</span></div>
-<div class="settingItem" onclick="clearFav()"><span>Clear Favourites</span><span>🗑️</span></div>
-<div class="settingItem" onclick="logout()"><span>Logout</span><span>🚪</span></div>
-<p style="color:#777;margin-top:20px;text-align:center;">CineFlick v2.0 • Made with ❤️</p>
-</div>
-
-<!-- BOTTOM NAV -->
-<div class="bottom">
-<div class="bActive" onclick="showPage('homePage',this)">🏠<br>Home</div>
-<div onclick="showPage('searchPage',this)">🔍<br>Search</div>
-<div onclick="showPage('favPage',this)">❤️<br>Favourite</div>
-<div onclick="showPage('settingsPage',this)">⚙️<br>Settings</div>
-</div>
-
-<!-- LOGIN MODAL -->
-<div id="loginModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:20;align-items:center;justify-content:center;">
-<div style="background:#1c1c1c;padding:20px;border-radius:12px;width:90%;max-width:320px;">
-<h3>Login</h3><input id="loginName" class="input" placeholder="Enter your name"><button class="btn" onclick="login()">Login</button><button class="btn" style="background:#333;" onclick="closeLogin()">Cancel</button>
-</div>
-</div>
-
-<script>
-const movies=[
-{name:"Dune: Prophecy",cat:"Sci-Fi",year:"2024",rating:"8.6",img:"https://image.tmdb.org/t/p/w500/8RPDks0H1Yd0Qv3r6p1P2p8h1a1.jpg"},
-{name:"Neon Heist",cat:"Action",year:"2024",rating:"7.9",img:"https://image.tmdb.org/t/p/w500/fypydCipcWDKDTTCoP100Rq4p1.jpg"},
-{name:"The Quiet Forest",cat:"Thriller",year:"2024",rating:"8.3",img:"https://image.tmdb.org/t/p/w500/1E5baAaEse26fej7uHcjOgEE2t2.jpg"},
-{name:"Echo Drift",cat:"Sci-Fi",year:"2024",rating:"8.5",img:"https://image.tmdb.org/t/p/w500/gKkl1xY6Xmi3Q9cB5y3w6w6w6.jpg"},
-{name:"Solo Leveling",cat:"Action",year:"2024",rating:"9.0",img:"https://image.tmdb.org/t/p/w500/GeBeJ5R1v3aR9e6p6v6p6v6p6v6.jpg"},
-{name:"Avengers: Secret Wars",cat:"Action",year:"2025",rating:"9.2",img:"https://image.tmdb
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
+body{background:#0a0a0a;color:#fff;padding-bottom:80px}
+.top{padding:10px 12px;display:flex;gap:8px;align-items:center;position:sticky;top:0;background:#0a0a0a;z-index:10}
+.search{flex:1;background:#1e1e1e;border-radius:25px;padding:10px 15px;display:flex;gap:8px;align-items:center}
+.search input{background:transparent;border:0;outline:0;color:#fff;width:100%}
+.page{display:none}.page.show{display:block}
+.tabs{display:flex;gap:8px;overflow:auto;padding:8px 12px}
+.tabs div{padding:8px 16px;background:#222;border-radius:20px;white-space:nowrap;font-size:13px}
+.tabs div.on{background:#f2d27a;color:#000}
+.banner{margin:12px;border-radius:16px;height:190px;background:linear-gradient(to top,#000,transparent),url('https://images.unsplash.com/photo-1536440136628-849c177e76a1');background-size:cover;display:flex;align-items:flex-end;padding:12px}
+.gold{margin:12px;background:linear-gradient(90deg,#c9a86a,#f9e7a0);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;color:#000}
+.row{display:flex;gap:10px;overflow:auto;padding:12px}
+.card{min-width:130px;background:#161616;border-radius:10px;overflow:hidden;position:relative}
+.card img{width:130px;height:175px;object-fit:cover}
+.badge{position:absolute;top:6px;left:6px;background:#f2d27a;color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.card p{padding:6px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bottom{position:fixed;bottom:0
