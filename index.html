@@ -45,19 +45,12 @@ header{display:flex;justify-content:space-between;padding:15px;background:#1e293
 <div class="modal-content">
 <h2 id="mTitle"></h2>
 <p id="modalCat" style="opacity:0.6;font-size:13px"></p>
-<button class="play-btn" onclick="let v=document.getElementById('myVideo'); v.muted=false; v.volume=1; v.play();">🔊 Play With Sound</button>
+<button class="play-btn" onclick="let v=document.getElementById('myVideo'); v.muted=false; v.volume=1; v.play();">▶️ Play With watch</button>
 </div>
 </div>
-
 <script>
 const movies=[
-{name:"Big Buck Bunny",cat:"anime",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",gtv-videos-bucket/sample/BigBuckBunny.mp4"},
-{name:"Elephant Dream",cat:"anime",img:"https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400",gtv-videos-bucket/sample/ElephantsDream.mp4"},
-{name:"For Bigger Blazes",cat:"hollywood",img:"https://images.unsplash.com/photo-1635805733572-1f3c9b4747a7?w=400",gtv-videos-bucket/sample/ForBiggerBlazes.mp4"},
-{name:"Squid Game",cat:"kdrama",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400",gtv-videos-bucket/sample/ForBiggerEscapes.mp4"},
-{name:"Attack on Titan",cat:"anime",img:"https://images.unsplash.com/photo-1601850494422-3cf14624b0b3?w=400",gtv-videos-bucket/sample/ForBiggerFun.mp4"},
-{name:"Avengers Demo",cat:"hollywood",img:"https://images.unsplash.com/photo-1626379616459-b2ce1d9decbc?w=400",gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"}
-];
+{name:"Attack on Titan",cat:"anime",img:"https://images.unsplash.com/photo-1601850494422-3cf14624b0b3?w=400",video:"https://www.w3schools.com/html/mov_bbb.mp4"},
 function render(list){
 document.getElementById('movieGrid').innerHTML=list.map(m=>`<div class="card" onclick="openModal('${m.name}','${m.cat}','${m.img}','${m.video}')"><img src="${m.img}"><div class="card-info"><h3>${m.name}</h3><p>${m.cat}</p></div></div>`).join('');
 }
