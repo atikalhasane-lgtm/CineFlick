@@ -1,24 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CineFlick</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CineFlick - Like MangoTV</title>
 <link rel="manifest" href="manifest.json">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
 body{background:#0a0a0a;color:#fff;padding-bottom:80px}
-.top{padding:10px 12px;display:flex;gap:8px;align-items:center;position:sticky;top:0;background:#0a0a0a;z-index:10}
-.search{flex:1;background:#1e1e1e;border-radius:25px;padding:10px 15px;display:flex;gap:8px;align-items:center}
+.top{padding:10px;display:flex;gap:8px;align-items:center;background:#111;position:sticky;top:0;z-index:10}
+.search{flex:1;background:#222;border-radius:20px;padding:9px 14px;display:flex;align-items:center;gap:6px}
 .search input{background:transparent;border:0;outline:0;color:#fff;width:100%}
+.search b{color:#00ff88;font-size:14px}
+.cat{display:flex;gap:8px;overflow:auto;padding:8px 12px}
+.cat div{padding:6px 14px;background:#222;border-radius:20px;font-size:13px;white-space:nowrap}
+.cat div.active{background:#ff1a1a}
+.banner{margin:10px;border-radius:14px;height:200px;background:linear-gradient(to top,#000 10%,transparent 90%),url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23');background-size:cover;position:relative}
+.bannerTxt{position:absolute;bottom:10px;left:10px}
+.hScroll{display:flex;gap:10px;overflow:auto;padding:10px 12px}
+.hCard{min-width:270px;background:#1a1a1a;border-radius:12px;padding:8px;display:flex;gap:10px;align-items:center}
+.hCard img{width:50px;height:70px;border-radius:8px;object-fit:cover}
+.hCard .play{margin-left:auto;background:#00e676;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#000}
+.premium{margin:12px;background:linear-gradient(90deg,#c9a86a,#f3e5a6);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;color:#000}
+.premium button{border:0;background:#fff7d6;padding:8px 16px;border-radius:20px;font-weight:700}
+.head{padding:12px;display:flex;justify-content:space-between}
+.filter{display:flex;gap:8px;overflow:auto;padding:0 12px}
+.filter div{background:#1e1e1e;padding:6px 14px;border-radius:20px;font-size:12px;white-space:nowrap}
+.filter div.on{background:#fff;color:#000}
+.grid{display:flex;gap:10px;overflow:auto;padding:12px}
+.mCard{min-width:125px}
+.mCard img{width:125px;height:175px;border-radius:10px;object-fit:cover}
+.mCard .tag{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.7);font-size:10px;padding:2px 6px;border-radius:4px}
+.mCard p{font-size:11px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:125px}
+.wrap{position:relative}
+.num{position:absolute;bottom:25px;right:2px;font-size:55px;font-weight:900;color:rgba(255,255,255,0.25);line-height:1}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#151515;display:flex;justify-content:space-around;padding:6px 0 8px;border-top:1px solid #222}
+.bottom div{text-align:center;font-size:11px;color:#777;cursor:pointer;position:relative}
+.bottom div.active{color:#00ff88}
+.hot{position:absolute;top:-4px;right:8px;background:red;color:#fff;font-size:8px;padding:2px 4px;border-radius:4px}
 .page{display:none}.page.show{display:block}
-.tabs{display:flex;gap:8px;overflow:auto;padding:8px 12px}
-.tabs div{padding:8px 16px;background:#222;border-radius:20px;white-space:nowrap;font-size:13px}
-.tabs div.on{background:#f2d27a;color:#000}
-.banner{margin:12px;border-radius:16px;height:190px;background:linear-gradient(to top,#000,transparent),url('https://images.unsplash.com/photo-1536440136628-849c177e76a1');background-size:cover;display:flex;align-items:flex-end;padding:12px}
-.gold{margin:12px;background:linear-gradient(90deg,#c9a86a,#f9e7a0);border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center;color:#000}
-.row{display:flex;gap:10px;overflow:auto;padding:12px}
-.card{min-width:130px;background:#161616;border-radius:10px;overflow:hidden;position:relative}
-.card img{width:130px;height:175px;object-fit:cover}
-.badge{position:absolute;top:6px;left:6px;background:#f2d27a;color:#000;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
-.card p{padding:6px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bottom{position:fixed;bottom:0
+.set{background:#1c1c1c;margin:10px;border-radius:10px;padding:14px;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<div class="top">
+<img src="https://i.imgur.com/8Km9tLL.png" style="width:36px;height:36px;border-radius:50%;background:#fff" onerror="this.style.display='none'">
+<div class="search">🔍<input id="mainSearch" value="Bleach" placeholder="Bleach" oninput="doSearch(this.value)"><b onclick="go('searchPage')">Search</b></div>
+<div>❓</div>
+</div>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page show">
+<div class="cat"><div class="active">🔴 LIVE</div><div>Football</div><div>Trending</div><div>Cricket</div><div>🍋 MangoTV</div></div>
+<div class="banner"><div class="bannerTxt"><h2>Dhamaal 4</h2><p style="font-size:12px;color:#ccc">2026 | Action • Comedy</p></div></div>
+
+<div class="hScroll" id="topScroll"></div>
+
+<div class="premium"><div>🔰 <b>Unlock Premium Benefits</b><br><small>No ads • HD • Premium Contents</small></div><button onclick="alert('Premium Coming Soon!')">Unlock</button></div>
+
+<div class="head"><b>Trending Movies</b><span onclick="go('searchPage')">All ></span></div>
+<div class="filter" id="movieFilter">
+<div class="on" onclick="filterMovies(this,'all')">TOP Movies</div>
+<div onclick="filterMovies(this,'cinema')">Cinema</div>
+<div onclick="filterMovies(this,'bengali')">New Bengali</div>
+<div onclick="filterMovies(this,'bollywood')">Bollywood</div>
+<div onclick="filterMovies(this,'hollywood')">Hollywood</div>
+</div>
+<div class="grid" id="movieGrid"></div>
+
+<div class="head"><b>Trending TV Series</b><span>All ></span></div>
+<div class="filter"><div class="on">Top Series</div><div>New Bengali</div><div>Anime</div><div>Asian Drama</div><div>Indian Drama</div></div>
+<div class="grid" id="tvGrid"></div>
+</div>
+
+<!-- SEARCH PAGE -->
+<div id="searchPage" class="page">
+<div style="padding:12px"><div class="search">🔍<input id="search2" oninput="doSearch(this.value)" placeholder="Search Bleach, Dhamaal..."></div>
+<div class="grid" id="searchGrid" style="flex-wrap:wrap"></div></div>
+</div>
+
+<!-- NOVELHUB -->
+<div id="novelPage" class="page"><div style="padding:20px"><h2>NovelHub 📚 HOT</h2><p style="color:#888;margin-top:10px">All novels available here</p></div></div>
+
+<!-- DOWNLOADS -->
+<div id="downPage" class="page"><div style="padding:20px"><h2>Downloads ⬇️</h2><p style="color:#888">No downloads yet</p></div></div>
+
+<!-- ME / SETTINGS -->
+<div id="mePage" class="page">
+<div style="padding:15px">
+<h2>Me</h2>
+<div class="set"><span id="uName">👤 Guest</span><span onclick="login()" style="color:#00ff88">Login</span></div>
+<div class="set"><span>Settings ⚙️</span><span>></span></div>
+<div class="set" onclick="localStorage.clear();location
