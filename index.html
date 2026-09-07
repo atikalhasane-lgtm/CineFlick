@@ -1,60 +1,124 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CineFlick</title><style>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CineFlick - All Movies</title>
+<style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#0a0a0a;color:#fff;padding-bottom:80px}
-.top{padding:10px;display:flex;gap:8px;align-items:center;background:#111;position:sticky;top:0;z-index:10}
-.search{flex:1;background:#222;border-radius:20px;padding:9px 14px;display:flex;gap:6px}
-.search input{flex:1;background:transparent;border:0;outline:0;color:#fff}
-.search b{color:#00ff88}
-.cat{display:flex;gap:8px;overflow:auto;padding:8px 12px}
-.cat div{padding:6px 14px;background:#222;border-radius:20px;font-size:13px;white-space:nowrap}
-.cat div.active{background:#ff1a1a}
-.hero{margin:10px 12px;height:185px;border-radius:14px;background:linear-gradient(to top,#000,transparent),url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23');background-size:cover;display:flex;align-items:flex-end;padding:12px}
-.hlist{display:flex;gap:10px;overflow:auto;padding:10px}
-.hcard{min-width:260px;background:#1a1a1a;border-radius:10px;padding:8px;display:flex;gap:10px;align-items:center}
-.hcard img{width:50px;height:70px;border-radius:8px;object-fit:cover}
-.prem{margin:12px;background:linear-gradient(90deg,#c8a86a,#f5e7a6);color:#000;padding:12px;border-radius:10px;display:flex;justify-content:space-between}
-.prem button{background:#fff;border:0;padding:6px 12px;border-radius:20px}
-.grid{display:flex;gap:10px;overflow:auto;padding:10px}
-.m{min-width:120px;position:relative}
-.m img{width:120px;height:170px;border-radius:10px;object-fit:cover}
-.m i{position:absolute;top:6px;left:6px;background:#f5d67a;color:#000;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-style:normal}
-.m p{font-size:11px;width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
+body{background:#0a0a0a;color:#fff;padding-bottom:75px}
+.top{padding:10px;display:flex;gap:8px;background:#111;position:sticky;top:0;z-index:10}
+.top input{flex:1;background:#222;border:0;padding:10px 15px;border-radius:25px;color:#fff;outline:0}
+.top b{color:#00ff88;padding:10px;font-size:14px}
+.cats{display:flex;gap:7px;overflow:auto;padding:10px 12px;scrollbar-width:none}
+.cats div{background:#222;padding:7px 14px;border-radius:20px;font-size:12px;white-space:nowrap}
+.cats div.on{background:#ff1a1a;color:#fff;font-weight:700}
+.hero{margin:10px 12px;height:190px;border-radius:14px;background:linear-gradient(to top,#000 10%,transparent),url('https://images.unsplash.com/photo-1485846234645-a62644f84728');background-size:cover;display:flex;align-items:flex-end;padding:12px}
+.title{padding:12px 12px 4px;display:flex;justify-content:space-between}
+.grid{display:flex;gap:10px;overflow:auto;padding:8px 12px;flex-wrap:nowrap}
+.grid.wrap{flex-wrap:wrap}
+.card{min-width:115px;position:relative}
+.card img{width:115px;height:165px;border-radius:10px;object-fit:cover;background:#222}
+.card p{font-size:11px;width:115px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:5px}
+.card small{font-size:10px;color:#999}
+.badge{position:absolute;top:6px;left:6px;background:#00ff88;color:#000;font-size:8px;padding:2px 5px;border-radius:4px;font-weight:800}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#151515;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #222}
-.bottom div{font-size:11px;color:#777;text-align:center}
+.bottom div{color:#777;font-size:11px;text-align:center}
 .bottom div.on{color:#00ff88}
 .page{display:none}.page.show{display:block}
-</style></head><body>
-<div class="top"><div class="search">🔍<input id="q" value="Bleach" placeholder="Search"><b onclick="search()">Search</b></div></div>
-<div id="p1" class="page show">
-<div class="cat"><div class="active">🔴 LIVE</div><div>Football</div><div>Trending</div><div>Cricket</div><div>MangoTV</div></div>
-<div class="hero"><div><b>Dhamaal 4 [Hindi] • 2026</b><br><small>Action • Comedy</small></div></div>
-<div class="hlist" id="hlist"></div>
-<div class="prem"><div><b>🔓 Unlock Premium Benefits</b><br><small>No ads • HD • Premium</small></div><button>Unlock</button></div>
-<div style="padding:10px"><b>Trending Movies</b></div>
+</style>
+</head>
+<body>
+<div class="top"><input id="q" placeholder="Search Bleach, Pushpa, Anime..." oninput="doSearch(this.value)"><b onclick="doSearch(document.getElementById('q').value)">Search</b></div>
+
+<div id="home" class="page show">
+<div class="cats" id="cats">
+<div class="on" onclick="filterCat('all',this)">All</div>
+<div onclick="filterCat('bollywood',this)">Bollywood</div>
+<div onclick="filterCat('hollywood',this)">Hollywood</div>
+<div onclick="filterCat('bangla',this)">Bangla</div>
+<div onclick="filterCat('anime',this)">Anime</div>
+<div onclick="filterCat('series',this)">Series</div>
+<div onclick="filterCat('tv',this)">TV Show</div>
+</div>
+<div class="hero"><div><b style="font-size:16px">Dhamaal 4 [Hindi]</b><br><small>Now Trending • Comedy • 2026</small></div></div>
+
+<div class="title"><b id="t1">All Movies</b><small style="color:#888">See All</small></div>
 <div class="grid" id="g1"></div>
-<div style="padding:10px"><b>Trending TV Series</b></div>
-<div class="grid" id="g2"></div>
+
+<div class="title"><b>Popular Anime</b><small style="color:#888">See All</small></div>
+<div class="grid" id="gAnime"></div>
+
+<div class="title"><b>TV Series & Shows</b><small style="color:#888">See All</small></div>
+<div class="grid" id="gSeries"></div>
 </div>
-<div id="p2" class="page"><div style="padding:12px"><h3>Search Result</h3><div class="grid" id="g3" style="flex-wrap:wrap"></div></div></div>
-<div id="p3" class="page"><div style="padding:20px"><h3>Me / Settings</h3><p style="background:#222;padding:14px;border-radius:10px;margin-top:10px" id="u">Guest <span onclick="let n=prompt('Name?');if(n){localStorage.setItem('u',n);location.reload()}" style="color:#0f0">Login</span></p><p style="background:#222;padding:14px;border-radius:10px;margin-top:10px" onclick="localStorage.clear();location.reload()">Clear Data</p></div></div>
+
+<div id="searchPage" class="page">
+<div style="padding:10px"><b>Search Result</b></div>
+<div class="grid wrap" id="gSearch"></div>
+</div>
+
+<div id="mePage" class="page">
+<div style="padding:20px"><h3>Me</h3>
+<div style="background:#1e1e1e;padding:14px;border-radius:10px;margin-top:12px">👤 Guest <span style="color:#00ff88" onclick="let n=prompt('নাম লিখো');if(n){localStorage.setItem('u',n);location.reload()}">Login</span></div>
+<div style="background:#1e1e1e;padding:14px;border-radius:10px;margin-top:10px">⚙️ All Movies Supported: Bollywood, Hollywood, Bangla, Anime, Series, TV Show</div>
+</div>
+</div>
+
 <div class="bottom">
-<div class="on" onclick="show(1,this)">🏠<br>Home</div>
-<div onclick="show(2,this)">🔍<br>Search</div>
-<div onclick="show(3,this)">👤<br>Me</div>
+<div class="on" onclick="nav('home',this)">🏠<br>Home</div>
+<div onclick="nav('searchPage',this)">🔍<br>Search</div>
+<div onclick="nav('mePage',this)">👤<br>Me</div>
 </div>
+
 <script>
 let movies=[
-{name:"Dhamaal 4 [Hindi]",img:"https://images.unsplash.com/photo-1536440136628-849c177e76a1"},
-{name:"Gandhari",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728"},
-{name:"Bleach",img:"https://images.unsplash.com/photo-1608346128025-1896b97a6fa7"},
-{name:"Pushpa 2",img:"https://images.unsplash.com/photo-1509347528160-9a9e33742cdb"},
-{name:"Animal",img:"https://images.unsplash.com/photo-1462331940025-496dfbfc7564"},
-{name:"Korean Kanakaraj",img:"https://images.unsplash.com/photo-1509347528160-9a9e33742cdb"}
+{name:"Dhamaal 4 [Hindi]",cat:"bollywood",type:"movie",year:"2026",img:"https://images.unsplash.com/photo-1536440136628-849c177e76a1"},
+{name:"Pushpa 2 The Rule",cat:"bollywood",type:"movie",year:"2024",img:"https://images.unsplash.com/photo-1509347528160-9a9e33742cdb"},
+{name:"Animal",cat:"bollywood",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1462331940025-496dfbfc7564"},
+{name:"Gandhari",cat:"bollywood",type:"movie",year:"2025",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728"},
+{name:"Avengers Endgame",cat:"hollywood",type:"movie",year:"2019",img:"https://images.unsplash.com/photo-1531259683007-016a7bbe742f"},
+{name:"John Wick 4",cat:"hollywood",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1574267432553-4b4628081c31"},
+{name:"Oppenheimer",cat:"hollywood",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23"},
+{name:"Priyotoma",cat:"bangla",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96"},
+{name:"Hawa",cat:"bangla",type:"movie",year:"2022",img:"https://images.unsplash.com/photo-1594909122845-11baa439b7bf"},
+{name:"Bleach",cat:"anime",type:"anime",year:"2024",img:"https://images.unsplash.com/photo-1608346128025-1896b97a6fa7"},
+{name:"Naruto",cat:"anime",type:"anime",year:"2023",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96"},
+{name:"One Piece",cat:"anime",type:"anime",year:"2024",img:"https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe"},
+{name:"Demon Slayer",cat:"anime",type:"anime",year:"2024",img:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23"},
+{name:"Money Heist",cat:"series",type:"series",year:"2021",img:"https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85"},
+{name:"Stranger Things",cat:"series",type:"series",year:"2023",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728"},
+{name:"Mirzapur",cat:"series",type:"series",year:"2023",img:"https://images.unsplash.com/photo-1536440136628-849c177e76a1"},
+{name:"Bigg Boss",cat:"tv",type:"tv",year:"2024",img:"https://images.unsplash.com/photo-1593784991095-a205069470b6"},
+{name:"Kapil Sharma Show",cat:"tv",type:"tv",year:"2023",img:"https://images.unsplash.com/photo-1594909122845-11baa439b7bf"}
 ];
-function render(list,id){document.getElementById(id).innerHTML=list.map((m,i)=>`<div class="m"><i>${i+1}</i><img src="${m.img}"><p>${m.name}</p></div>`).join('')}
-function show(n,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById('p'+n).classList.add('show');document.querySelectorAll('.bottom div').forEach(d=>d.classList.remove('on'));el.classList.add('on')}
-function search(){let q=document.getElementById('q').value.toLowerCase();let f=movies.filter(m=>m.name.toLowerCase().includes(q));render(f,'g1');render(f,'g3');show(2,document.querySelectorAll('.bottom div')[1])}
-render(movies,'g1');render(movies,'g2');render(movies,'g3');
-document.getElementById('hlist').innerHTML=movies.map(m=>`<div class="hcard"><img src="${m.img}"><div><b style="font-size:13px">${m.name}</b><br><small>2026</small></div></div>`).join('');
-</script></body></html>
+
+function render(list,id){
+ document.getElementById(id).innerHTML=list.map(m=>`
+ <div class="card"><span class="badge">${m.cat.toUpperCase()}</span><img src="${m.img}"><p>${m.name}</p><small>${m.year} • ${m.type}</small></div>
+ `).join('');
+}
+function filterCat(c,el){
+ document.querySelectorAll('#cats div').forEach(d=>d.classList.remove('on')); el.classList.add('on');
+ let f = c=='all'?movies:movies.filter(m=>m.cat==c);
+ document.getElementById('t1').innerText = c=='all'?'All Movies':c.toUpperCase();
+ render(f,'g1');
+}
+function doSearch(q){
+ if(!q){render(movies,'gSearch'); return;}
+ let f=movies.filter(m=>m.name.toLowerCase().includes(q.toLowerCase()) || m.cat.includes(q.toLowerCase()));
+ render(f,'gSearch');
+ nav('searchPage',document.querySelectorAll('.bottom div')[1]);
+}
+function nav(id,el){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+ document.getElementById(id).classList.add('show');
+ document.querySelectorAll('.bottom div').forEach(d=>d.classList.remove('on'));
+ if(el) el.classList.add('on');
+}
+render(movies,'g1');
+render(movies.filter(m=>m.cat=='anime'),'gAnime');
+render(movies.filter(m=>m.type=='series' || m.type=='tv'),'gSeries');
+render(movies,'gSearch');
+</script>
+</body>
+  </html>
