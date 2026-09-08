@@ -1,83 +1,19 @@
-<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>CineFlick FREE - No Premium</title><style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,sans-serif}           {
-  "name": "CineFlick FREE - No Premium",
-  "short_name": "CineFlick",
-  "description": "Free movies, no premium needed. Watch all movies free.",
-  "start_url": "/CineFlick/",
-  "display": "standalone",
-  "background_color": "#0c0c0c",
-  "theme_color": "#00ff88",
-  "icons": [
-    {
-      "src": "https://i.postimg.cc/6qY2vQ4g/cine.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}                           
-body{background:#0c0c0c;color:#fff}
-.hdr{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:#0c0c0c;position:sticky;top:0;z-index:10}
-.hdr b{font-size:19px}.hdr b span{color:#00ff88}
-.sch{background:#1a1a1a;margin:0 14px 10px;padding:10px 14px;border-radius:24px;display:flex;gap:8px;align-items:center;border:1px solid #222}
-.sch input{flex:1;background:transparent;border:0;color:#fff;outline:none}
-.tabs{display:flex;gap:22px;padding:0 14px 10px;border-bottom:1px solid #1a1a1a;overflow:auto;white-space:nowrap}
-.tabs::-webkit-scrollbar{display:none}
-.tabs span{padding-bottom:8px;color:#666;font-size:14px;cursor:pointer}.tabs span.on{color:#fff;border-bottom:2px solid #00ff88}
-.banner{margin:12px 14px;height:170px;border-radius:14px;background:linear-gradient(135deg,#00ff88,#0088ff);display:flex;align-items:end;padding:14px;position:relative;overflow:hidden}
-.banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
-.banner div{position:relative;z-index:1}
-.row{display:flex;gap:11px;overflow:auto;padding:10px 14px}.row::-webkit-scrollbar{display:none}
-.card{min-width:108px;cursor:pointer}.card img{width:108px;height:152px;border-radius:10px;object-fit:cover;background:#1e1e1e}
-.card p{font-size:11px;margin-top:5px;width:108px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.badge{background:#00ff88;color:#000;font-size:9px;font-weight:900;padding:2px 5px;border-radius:4px;position:absolute;top:6px;left:6px}
-.imgwrap{position:relative}
+          <!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CineFlick FREE</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00ff88">
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}body{background:#0c0c0c;color:#fff;padding-bottom:70px}
+.top{padding:12px;display:flex;gap:10px;background:#111;position:sticky;top:0}.top input{flex:1;background:#222;border:0;padding:10px 14px;border-radius:20px;color:#fff}
+.card img{width:110px;height:150px;border-radius:10px;object-fit:cover}.row{display:flex;gap:10px;overflow:auto;padding:10px}.row::-webkit-scrollbar{display:none}
 .page{display:none}.page.show{display:block}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#141414;display:flex;justify-content:space-around;padding:8px 0 12px;border-top:1px solid #222;z-index:20}
-.bottom div{font-size:10px;color:#666;text-align:center}.bottom div.on{color:#00ff88}
-.player{position:fixed;inset:0;background:#000;z-index:100;display:none}.player.show{display:block}
+.tab{position:fixed;bottom:0;left:0;right:0;background:#141414;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #222}
+.tab div{color:#666;font-size:11px}.tab div.on{color:#00ff88}
 </style></head><body>
-<div id="home" class="page show">
-<div class="hdr"><b>CineFlick <span>FREE</span></b><div>📺 🔔</div></div>
-<div class="sch">🔍<input id="q" placeholder="Search movies, anime, বাংলা..." oninput="search(this.value)"></div>
-<div class="tabs"><span class="on">Global</span><span>India</span><span>Hot</span><span>Bangla</span><span>Anime</span><span>For You</span></div>
-<div class="banner"><img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600"><div><b style="font-size:18px">FREE Unlimited</b><br><small>All movies unlocked - No Premium</small><br><small style="background:#fff;color:#000;padding:3px 8px;border-radius:12px;font-size:10px;margin-top:6px;display:inline-block">▶️ Play Now</small></div></div>
-<div style="padding:0 14px;display:flex;justify-content:space-between"><b>🔥 Trending FREE</b><small style="color:#00ff88">See All ></small></div>
-<div class="row" id="r1"></div>
-<div style="padding:0 14px;margin-top:4px"><b>🎬 Recently Updated</b></div>
-<div class="row" id="r2"></div>
-<div style="padding:0 14px;margin-top:4px"><b>🇧🇩 Bangla Dubbed</b></div>
-<div class="row" id="r3"></div>
-</div>
-
-<div id="searchPage" class="page"><div class="hdr"><span onclick="go('home')">⬅</span><b>Search</b><span></span></div><div class="sch">🔍<input id="sq" placeholder="Search..." oninput="search(this.value)"></div><div id="sRes" style="padding:0 14px"></div></div>
-<div id="downPage" class="page"><div class="hdr"><b>Downloads</b><span>🗑️</span></div><div id="dList" style="padding:14px"></div></div>
-<div id="mePage" class="page"><div style="padding:20px;display:flex;gap:14px;align-items:center"><img src="https://i.pravatar.cc/80?img=11" style="width:60px;height:60px;border-radius:50%"><div><b>ATIK AL HASAN ENAM</b><br><small style="background:#1f1f1f;padding:3px 8px;border-radius:8px">ID: 240356831</small><div style="color:#00ff88;font-size:11px;margin-top:6px">● FREE VIP Unlimited ✓</div></div></div><div style="margin:14px;background:#1a1a1a;padding:14px;border-radius:12px"><b>⭐ No Premium - All FREE</b><br><small style="color:#888">You have lifetime free access</small></div></div>
-
-<div id="playPage" class="player"><div style="display:flex;justify-content:space-between;padding:12px;background:#111"><span onclick="closeP()" style="cursor:pointer">⬅ Back</span><span style="background:#00ff88;color:#000;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:800">FREE HD</span></div><iframe id="v" style="width:100%;height:42%;border:0" allowfullscreen></iframe><div style="padding:16px"><h3 id="vt">Movie</h3><small style="color:#888">FREE • No Ads • 2025 • HD</small><div style="display:flex;gap:10px;margin-top:14px"><button onclick="dl()" style="background:#222;color:#fff;border:0;padding:10px 18px;border-radius:20px">⬇️ Free Download</button><button style="background:#00ff88;color:#000;border:0;padding:10px 22px;border-radius:20px;font-weight:900">▶️ Play FREE</button></div><div id="dlMsg" style="color:#00ff88;margin-top:12px;display:none">✅ Saved to Downloads!</div></div></div>
-
-<div class="bottom"><div class="on" onclick="go('home',this)">🏠<br>Home</div><div onclick="go('searchPage',this)">🔍<br>Search</div><div onclick="go('downPage',this)">⬇️<br>Downloads</div><div onclick="go('mePage',this)">👤<br>Me</div></div>
-
+<div id="h" class="page show"><div class="top">🔍<input placeholder="Search..."><span>FREE</span></div><div style="padding:12px"><b>🔥 FREE Movies - No Premium</b></div><div class="row" id="r1"></div></div>
+<div id="d" class="page"><div style="padding:14px"><b>Downloads</b><div id="dl" style="margin-top:14px;color:#666">No downloads yet</div></div></div>
+<div class="tab"><div class="on" onclick="go('h',this)">🏠<br>Home</div><div onclick="go('d',this)">⬇️<br>Down</div></div>
 <script>
-let db=[
-{n:"Pushpa 2: The Rule",i:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400",y:"https://www.youtube.com/embed/gQJRJ2o4wBw"},
-{n:"Alpha (Hindi) 2025",i:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=400",y:"https://www.youtube.com/embed/5W1h1RrVv1Y"},
-{n:"Bleach: TYBW EP 24",i:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",y:"https://www.youtube.com/embed/78WIYzYkY54"},
-{n:"Naruto Shippuden",i:"https://images.unsplash.com/photo-1608346128025-1896b97a6fa7?w=400",y:"https://www.youtube.com/embed/22L3B2u3R5U"},
-{n:"Andhar - Bangla",i:"https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400",y:"https://www.youtube.com/embed/dQw4w9WgXcQ"},
-{n:"Attack on Titan Final",i:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400",y:"https://www.youtube.com/embed/MGRm4IzK1SQ"},
-{n:"Welcome to Jungle",i:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400",y:"https://www.youtube.com/embed/dQw4w9WgXcQ"},
-{n:"Boruto Movie 2025",i:"https://images.unsplash.com/photo-1517604931442-7e0c8ed2963d?w=400",y:"https://www.youtube.com/embed/dQw4w9WgXcQ"}
-];
-let downs=JSON.parse(localStorage.getItem('cf_down')||'[]');
-let cur=null;
-function card(m){return `<div class=card onclick="openP('${m.y}','${m.n}')"><div class=imgwrap><img src="${m.i}"><span class=badge>FREE</span></div><p>${m.n}</p></div>`}
-function render(){r1.innerHTML=db.map(card).join('');r2.innerHTML=[...db].reverse().map(card).join('');r3.innerHTML=db.slice(2,6).map(card).join('');sRes.innerHTML=db.map(m=>`<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a" onclick="openP('${m.y}','${m.n}')"><img src="${m.i}" style="width:72px;height:100px;border-radius:8px;object-fit:cover"><div><b style="font-size:13px">${m.n}</b><br><small style="color:#888">HD • 2025</small><br><span style="background:#00ff88;color:#000;font-size:10px;padding:2px 6px;border-radius:4px">FREE</span></div></div>`).join('');renderDown()}
-function renderDown(){if(downs.length==0){dList.innerHTML='<div style="text-align:center;color:#666;margin-top:40px">📦 No Downloads<br><small>Tap Free Download on any movie</small></div>';return}dList.innerHTML=downs.map(d=>`<div style="display:flex;gap:12px;background:#111;padding:12px;border-radius:10px;margin-bottom:10px"><img src="${d.i}" style="width:60px;height:84px;border-radius:6px"><div><b style="font-size:13px">${d.n}</b><br><small style="color:#00ff88">✅ Downloaded FREE</small><br><button onclick="openP('${d.y}','${d.n}')" style="margin-top:6px;background:#00ff88;border:0;padding:5px 12px;border-radius:14px;font-size:11px">▶️ Play</button></div></div>`).join('')}
-function openP(link,name){cur=db.find(x=>x.y==link)||{n:name,y:link,i:db[0].i};document.getElementById('playPage').classList.add('show');v.src=link;vt.innerText=name}
-function closeP(){document.getElementById('playPage').classList.remove('show');v.src=''}
-function go(id,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById(id).classList.add('show');if(el){document.querySelectorAll('.bottom div').forEach(d=>d.classList.remove('on'));el.classList.add('on')}if(id=='downPage')renderDown()}
-function search(q){if(!q)return;let f=db.filter(m=>m.n.toLowerCase().includes(q.toLowerCase()));sRes.innerHTML=f.map(m=>`<div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #1a1a1a" onclick="openP('${m.y}','${m.n}')"><img src="${m.i}" style="width:72px;height:100px;border-radius:8px"><div><b>${m.n}</b><br><small style="color:#00ff88">FREE</small></div></div>`).join('');go('searchPage')}
-function dl(){if(!cur)return;if(!downs.find(x=>x.n==cur.n)){downs.push(cur);localStorage.setItem('cf_down',JSON.stringify(downs))}document.getElementById('dlMsg').style.display='block';setTimeout(()=>{closeP();go('downPage')},800)}
-render();
-</script></body></html>
+let m=[{n:"Pushpa 2",i:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300"},{n:"Alpha",i:"https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300"},{n:"Bleach",i:"https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300"}];
+r1.innerHTML=m.map(x=>`<div><img src="${x.i}"><p style="font-size:11px">${x.n}</p><small style="color:#00ff88">FREE</small></div>`).join('');
+function go(id,e){document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('.tab div').forEach(d=>d.classList.remove('on'));e.classList.add('on')}
+</script></body></html>          
