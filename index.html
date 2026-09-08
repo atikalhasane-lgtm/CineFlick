@@ -1,132 +1,54 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CineFlick - All Movies</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Free MovieBox</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
-body{background:#0a0a0a;color:#fff;padding-bottom:75px}
-.top{padding:10px;display:flex;gap:8px;background:#111;position:sticky;top:0;z-index:10}
-.top input{flex:1;background:#222;border:0;padding:10px 15px;border-radius:25px;color:#fff;outline:0}
-.top b{color:#00ff88;padding:10px;font-size:14px}
-.cats{display:flex;gap:7px;overflow:auto;padding:10px 12px;scrollbar-width:none}
-.cats div{background:#222;padding:7px 14px;border-radius:20px;font-size:12px;white-space:nowrap}
-.cats div.on{background:#ff1a1a;color:#fff;font-weight:700}
-.hero{margin:10px 12px;height:190px;border-radius:14px;background:linear-gradient(to top,#000 10%,transparent),url('https://images.unsplash.com/photo-1485846234645-a62644f84728');background-size:cover;display:flex;align-items:flex-end;padding:12px}
-.title{padding:12px 12px 4px;display:flex;justify-content:space-between}
-.grid{display:flex;gap:10px;overflow:auto;padding:8px 12px;flex-wrap:nowrap}
-.grid.wrap{flex-wrap:wrap}
-.card{min-width:115px;position:relative}
-.card img{width:115px;height:165px;border-radius:10px;object-fit:cover;background:#222}
-.card p{font-size:11px;width:115px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:5px}
-.card small{font-size:10px;color:#999}
-.badge{position:absolute;top:6px;left:6px;background:#00ff88;color:#000;font-size:8px;padding:2px 5px;border-radius:4px;font-weight:800}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#151515;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #222}
-.bottom div{color:#777;font-size:11px;text-align:center}
-.bottom div.on{color:#00ff88}
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+body{background:#0f0f0f;color:#fff;padding-bottom:70px}
 .page{display:none}.page.show{display:block}
-</style>
-</head>
-<body>
-<div class="top"><input id="q" placeholder="Search Bleach, Pushpa, Anime..." oninput="doSearch(this.value)"><b onclick="doSearch(document.getElementById('q').value)">Search</b></div>
+.top{padding:10px;background:#111;display:flex;gap:8px;position:sticky;top:0;z-index:5}
+.top input{flex:1;background:#222;border:0;padding:10px;border-radius:8px;color:#fff}
+.chip{background:#222;padding:6px 12px;border-radius:16px;font-size:12px;margin:3px;display:inline-block;cursor:pointer}
+.cardRow{display:flex;gap:8px;overflow:auto;padding:10px}
+.card{min-width:110px;cursor:pointer}.card img{width:110px;height:150px;border-radius:8px;object-fit:cover}
+.item{display:flex;gap:10px;padding:10px;border-bottom:1px solid #222;cursor:pointer}
+.tab{position:fixed;bottom:0;left:0;right:0;background:#151515;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #222;z-index:99}
+.tab div{color:#666;font-size:10px;text-align:center;cursor:pointer}.tab div.on{color:#fff}
+.free{position:absolute;top:6px;right:6px;background:#00ff88;color:#000;font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700}
+</style></head><body>
 
+<!-- HOME -->
 <div id="home" class="page show">
-<div class="cats" id="cats">
-<div class="on" onclick="filterCat('all',this)">All</div>
-<div onclick="filterCat('bollywood',this)">Bollywood</div>
-<div onclick="filterCat('hollywood',this)">Hollywood</div>
-<div onclick="filterCat('bangla',this)">Bangla</div>
-<div onclick="filterCat('anime',this)">Anime</div>
-<div onclick="filterCat('series',this)">Series</div>
-<div onclick="filterCat('tv',this)">TV Show</div>
-</div>
-<div class="hero"><div><b style="font-size:16px">Dhamaal 4 [Hindi]</b><br><small>Now Trending • Comedy • 2026</small></div></div>
-
-<div class="title"><b id="t1">All Movies</b><small style="color:#888">See All</small></div>
-<div class="grid" id="g1"></div>
-
-<div class="title"><b>Popular Anime</b><small style="color:#888">See All</small></div>
-<div class="grid" id="gAnime"></div>
-
-<div class="title"><b>TV Series & Shows</b><small style="color:#888">See All</small></div>
-<div class="grid" id="gSeries"></div>
+<div class="top"><span>🔍</span><input placeholder="Search free movies..." onfocus="go('search')"><span>🎤</span></div>
+<div style="padding:10px"><b>🔥 Trending - FREE</b></div>
+<div class="cardRow" id="g1"></div>
+<div style="padding:10px"><b>For you</b></div>
+<div class="cardRow" id="g2"></div>
+<div style="padding:10px"><b>BuzzBox - Free Shorts</b></div>
+<div class="cardRow" id="g3"></div>
 </div>
 
-<div id="searchPage" class="page">
-<div style="padding:10px"><b>Search Result</b></div>
-<div class="grid wrap" id="gSearch"></div>
-</div>
-
-<div id="mePage" class="page">
-<div style="padding:20px"><h3>Me</h3>
-<div style="background:#1e1e1e;padding:14px;border-radius:10px;margin-top:12px">👤 Guest <span style="color:#00ff88" onclick="let n=prompt('নাম লিখো');if(n){localStorage.setItem('u',n);location.reload()}">Login</span></div>
-<div style="background:#1e1e1e;padding:14px;border-radius:10px;margin-top:10px">⚙️ All Movies Supported: Bollywood, Hollywood, Bangla, Anime, Series, TV Show</div>
+<!-- SEARCH -->
+<div id="search" class="page">
+<div class="top"><span onclick="go('home')" style="font-size:20px;cursor:pointer"><</span><input id="sq" placeholder="Naruto: Shippuden" oninput="searchM(this.value)"><span style="color:#00ff88" onclick="searchM(sq.value)">Search</span></div>
+<div style="padding:12px">
+<b>Recent</b><div id="rec" style="margin-top:6px"></div>
+<div style="margin-top:12px"><b>🔥 Everyone is searching</b></div>
+<div style="margin-top:6px"><span class="chip">Bleach</span><span class="chip">Andhar</span><span class="chip">Attack on Titan [Hindi]</span><span class="chip">Hunter x Hunter</span></div>
+<div id="sList" style="margin-top:12px"></div>
 </div>
 </div>
 
-<div class="bottom">
-<div class="on" onclick="nav('home',this)">🏠<br>Home</div>
-<div onclick="nav('searchPage',this)">🔍<br>Search</div>
-<div onclick="nav('mePage',this)">👤<br>Me</div>
+<!-- PLAYER - 100% FREE -->
+<div id="player" class="page">
+<div style="background:#000;position:relative">
+<div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:10px;z-index:2;background:linear-gradient(#000,transparent)"><span onclick="go('home')" style="cursor:pointer;font-size:22px"><</span><span style="background:#00ff88;color:#000;font-size:10px;padding:4px 8px;border-radius:12px;font-weight:700">FREE HD</span></div>
+<iframe id="vFrame" style="width:100%;height:240px;border:0" allowfullscreen></iframe>
 </div>
+<div style="padding:12px">
+<div style="display:flex;gap:8px;align-items:center"><b id="vTitle">Attack on Titan [Hindi]</b><span style="background:#00ff88;color:#000;font-size:9px;padding:2px 6px;border-radius:4px">FREE</span></div>
+<div style="color:#888;font-size:12px;margin-top:4px">⭐ 9.1 | 2013 | Japan | Anime | No Ads • Free Download</div>
+<div style="display:flex;gap:8px;margin-top:10px"><button style="background:#222;color:#fff;border:0;padding:8px 14px;border-radius:20px">➕ List</button><button style="background:#222;color:#fff;border:0;padding:8px 14px;border-radius:20px">↗️ Share</button><button style="background:#00ff88;color:#000;border:0;padding:8px 16px;border-radius:20px;font-weight:700" onclick="alert('Free Download Started')">⬇️ Free Download</button></div>
+<div style="margin-top:14px"><b>Season 01 - All Free</b></div>
+<div style="display:flex;gap:8px;margin-top:8px;overflow:auto"><div style="background:#00ff88;color:#000;padding:10px 14px;border-radius:8px">01</div><div style="background:#222;padding:10px 14px;border-radius:8px">02</div><div style="background:#222;padding:10px 14px;border-radius:8px">03</div><div style="background:#222;padding:10px 14px;border-radius:8px">04</div><div style="background:#222;padding:10px 14px;border-radius:8px">05</div><div style="background:#222;padding:10px 14px;border-radius:8px">06</div></div>
 
-<script>
-function uploadMovie(){
- let movie = {
-   name: document.getElementById('mName').value,
-   cat: document.getElementById('mCat').value, // korea, anime, cartoon, bangla...
-   video: document.getElementById('mLink').value,
-   uploader: localStorage.getItem('u') || 'Guest',
-   time: Date.now()
- };
- saveToFirebase(movie);
- }{name:"Dhamaal 4 [Hindi]",cat:"bollywood",type:"movie",year:"2026",img:"https://images.unsplash.com/photo-1536440136628-849c177e76a1"},
-{name:"Pushpa 2 The Rule",cat:"bollywood",type:"movie",year:"2024",img:"https://images.unsplash.com/photo-1509347528160-9a9e33742cdb"},
-{name:"Animal",cat:"bollywood",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1462331940025-496dfbfc7564"},
-{name:"Gandhari",cat:"bollywood",type:"movie",year:"2025",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728"},
-{name:"Avengers Endgame",cat:"hollywood",type:"movie",year:"2019",img:"https://images.unsplash.com/photo-1531259683007-016a7bbe742f"},
-{name:"John Wick 4",cat:"hollywood",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1574267432553-4b4628081c31"},
-{name:"Oppenheimer",cat:"hollywood",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23"},
-{name:"Priyotoma",cat:"bangla",type:"movie",year:"2023",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96"},
-{name:"Hawa",cat:"bangla",type:"movie",year:"2022",img:"https://images.unsplash.com/photo-1594909122845-11baa439b7bf"},
-{name:"Bleach",cat:"anime",type:"anime",year:"2024",img:"https://images.unsplash.com/photo-1608346128025-1896b97a6fa7"},
-{name:"Naruto",cat:"anime",type:"anime",year:"2023",img:"https://images.unsplash.com/photo-1578662996442-48f60103fc96"},
-{name:"One Piece",cat:"anime",type:"anime",year:"2024",img:"https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe"},
-{name:"Demon Slayer",cat:"anime",type:"anime",year:"2024",img:"https://images.unsplash.com/photo-1518709268805-4e9042af9f23"},
-{name:"Money Heist",cat:"series",type:"series",year:"2021",img:"https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85"},
-{name:"Stranger Things",cat:"series",type:"series",year:"2023",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728"},
-{name:"Mirzapur",cat:"series",type:"series",year:"2023",img:"https://images.unsplash.com/photo-1536440136628-849c177e76a1"},
-{name:"Bigg Boss",cat:"tv",type:"tv",year:"2024",img:"https://images.unsplash.com/photo-1593784991095-a205069470b6"},
-{name:"Kapil Sharma Show",cat:"tv",type:"tv",year:"2023",img:"https://images.unsplash.com/photo-1594909122845-11baa439b7bf"}
-];
-
-function render(list,id){
- document.getElementById(id).innerHTML=list.map(m=>`
- <div class="card"><span class="badge">${m.cat.toUpperCase()}</span><img src="${m.img}"><p>${m.name}</p><small>${m.year} • ${m.type}</small></div>
- `).join('');
-}
-function filterCat(c,el){
- document.querySelectorAll('#cats div').forEach(d=>d.classList.remove('on')); el.classList.add('on');
- let f = c=='all'?movies:movies.filter(m=>m.cat==c);
- document.getElementById('t1').innerText = c=='all'?'All Movies':c.toUpperCase();
- render(f,'g1');
-}
-function doSearch(q){
- if(!q){render(movies,'gSearch'); return;}
- let f=movies.filter(m=>m.name.toLowerCase().includes(q.toLowerCase()) || m.cat.includes(q.toLowerCase()));
- render(f,'gSearch');
- nav('searchPage',document.querySelectorAll('.bottom div')[1]);
-}
-function nav(id,el){
- document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
- document.getElementById(id).classList.add('show');
- document.querySelectorAll('.bottom div').forEach(d=>d.classList.remove('on'));
- if(el) el.classList.add('on');
-}
-render(movies,'g1');
-render(movies.filter(m=>m.cat=='anime'),'gAnime');
-render(movies.filter(m=>m.type=='series' || m.type=='tv'),'gSeries');
-render(movies,'gSearch');
-</script>
-</body>
-  </html>
+<div style="margin-top:16px"><b>For you - More Free</b></div>
+<div class="cardRow" id="more
