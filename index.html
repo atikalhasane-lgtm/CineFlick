@@ -1,54 +1,120 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Free MovieBox</title>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CineFlick - Free Movies</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}
 body{background:#0f0f0f;color:#fff;padding-bottom:70px}
 .page{display:none}.page.show{display:block}
-.top{padding:10px;background:#111;display:flex;gap:8px;position:sticky;top:0;z-index:5}
-.top input{flex:1;background:#222;border:0;padding:10px;border-radius:8px;color:#fff}
-.chip{background:#222;padding:6px 12px;border-radius:16px;font-size:12px;margin:3px;display:inline-block;cursor:pointer}
-.cardRow{display:flex;gap:8px;overflow:auto;padding:10px}
+.top{background:#111;padding:10px;display:flex;gap:8px;align-items:center;position:sticky;top:0;z-index:10}
+.top input{flex:1;background:#222;border:0;padding:10px 12px;border-radius:8px;color:#fff}
+.cardRow{display:flex;gap:10px;overflow:auto;padding:10px}
 .card{min-width:110px;cursor:pointer}.card img{width:110px;height:150px;border-radius:8px;object-fit:cover}
-.item{display:flex;gap:10px;padding:10px;border-bottom:1px solid #222;cursor:pointer}
-.tab{position:fixed;bottom:0;left:0;right:0;background:#151515;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #222;z-index:99}
-.tab div{color:#666;font-size:10px;text-align:center;cursor:pointer}.tab div.on{color:#fff}
-.free{position:absolute;top:6px;right:6px;background:#00ff88;color:#000;font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700}
-</style></head><body>
+.tab{position:fixed;bottom:0;left:0;right:0;background:#151515;display:flex;justify-content:space-around;padding:8px 0;border-top:1px solid #222}
+.tab div{font-size:10px;color:#666;text-align:center;cursor:pointer}.tab div.on{color:#00ff88}
+.list{display:flex;gap:10px;padding:10px;border-bottom:1px solid #1a1a1a;cursor:pointer}
+</style>
+</head>
+<body>
 
 <!-- HOME -->
 <div id="home" class="page show">
-<div class="top"><span>🔍</span><input placeholder="Search free movies..." onfocus="go('search')"><span>🎤</span></div>
-<div style="padding:10px"><b>🔥 Trending - FREE</b></div>
-<div class="cardRow" id="g1"></div>
-<div style="padding:10px"><b>For you</b></div>
-<div class="cardRow" id="g2"></div>
-<div style="padding:10px"><b>BuzzBox - Free Shorts</b></div>
-<div class="cardRow" id="g3"></div>
+<div class="top"><span>🔍</span><input id="q" placeholder="Search - Bleach, Naruto, বাংলা" oninput="searchMovie(this.value)"><span>🎤</span></div>
+<div style="padding:10px"><b>🔥 Free Movies - No Premium</b></div>
+<div class="cardRow" id="grid"></div>
+<div style="padding:10px"><b>For You</b></div>
+<div class="cardRow" id="grid2"></div>
 </div>
 
 <!-- SEARCH -->
 <div id="search" class="page">
-<div class="top"><span onclick="go('home')" style="font-size:20px;cursor:pointer"><</span><input id="sq" placeholder="Naruto: Shippuden" oninput="searchM(this.value)"><span style="color:#00ff88" onclick="searchM(sq.value)">Search</span></div>
-<div style="padding:12px">
-<b>Recent</b><div id="rec" style="margin-top:6px"></div>
-<div style="margin-top:12px"><b>🔥 Everyone is searching</b></div>
-<div style="margin-top:6px"><span class="chip">Bleach</span><span class="chip">Andhar</span><span class="chip">Attack on Titan [Hindi]</span><span class="chip">Hunter x Hunter</span></div>
-<div id="sList" style="margin-top:12px"></div>
-</div>
+<div class="top"><span onclick="openP('home')"><</span><input id="sq" placeholder="Search..." oninput="searchMovie(this.value)"><span style="color:#00ff88" onclick="searchMovie(sq.value)">Search</span></div>
+<div id="sResult" style="padding:10px"></div>
 </div>
 
-<!-- PLAYER - 100% FREE -->
+<!-- PLAYER - FREE NO UNLOCK -->
 <div id="player" class="page">
-<div style="background:#000;position:relative">
-<div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:10px;z-index:2;background:linear-gradient(#000,transparent)"><span onclick="go('home')" style="cursor:pointer;font-size:22px"><</span><span style="background:#00ff88;color:#000;font-size:10px;padding:4px 8px;border-radius:12px;font-weight:700">FREE HD</span></div>
-<iframe id="vFrame" style="width:100%;height:240px;border:0" allowfullscreen></iframe>
+<div style="background:#000">
+<div style="padding:10px;display:flex;justify-content:space-between"><span onclick="openP('home')" style="cursor:pointer">⬅ Back</span><span style="background:#00ff88;color:#000;padding:2px 8px;border-radius:4px;font-size:10px">FREE HD</span></div>
+<iframe id="vFrame" src="" style="width:100%;height:240px;border:0" allowfullscreen></iframe>
 </div>
 <div style="padding:12px">
-<div style="display:flex;gap:8px;align-items:center"><b id="vTitle">Attack on Titan [Hindi]</b><span style="background:#00ff88;color:#000;font-size:9px;padding:2px 6px;border-radius:4px">FREE</span></div>
-<div style="color:#888;font-size:12px;margin-top:4px">⭐ 9.1 | 2013 | Japan | Anime | No Ads • Free Download</div>
-<div style="display:flex;gap:8px;margin-top:10px"><button style="background:#222;color:#fff;border:0;padding:8px 14px;border-radius:20px">➕ List</button><button style="background:#222;color:#fff;border:0;padding:8px 14px;border-radius:20px">↗️ Share</button><button style="background:#00ff88;color:#000;border:0;padding:8px 16px;border-radius:20px;font-weight:700" onclick="alert('Free Download Started')">⬇️ Free Download</button></div>
-<div style="margin-top:14px"><b>Season 01 - All Free</b></div>
-<div style="display:flex;gap:8px;margin-top:8px;overflow:auto"><div style="background:#00ff88;color:#000;padding:10px 14px;border-radius:8px">01</div><div style="background:#222;padding:10px 14px;border-radius:8px">02</div><div style="background:#222;padding:10px 14px;border-radius:8px">03</div><div style="background:#222;padding:10px 14px;border-radius:8px">04</div><div style="background:#222;padding:10px 14px;border-radius:8px">05</div><div style="background:#222;padding:10px 14px;border-radius:8px">06</div></div>
+<b id="vTitle">Attack on Titan [Hindi]</b> <span style="background:#00ff88;color:#000;font-size:10px;padding:2px 6px;border-radius:4px">FREE</span>
+<div style="color:#888;font-size:12px;margin-top:4px">⭐ 9.1 | 2013 | Japan | Anime | Free • No Ads • HD</div>
+<div style="display:flex;gap:8px;margin-top:10px">
+<button style="background:#222;color:#fff;border:0;padding:8px 12px;border-radius:20px">➕ My List</button>
+<button style="background:#00ff88;color:#000;border:0;padding:8px 16px;border-radius:20px;font-weight:700">⬇️ Free Download</button>
+</div>
+<div style="margin-top:14px"><b>Episode - All Free</b></div>
+<div style="display:flex;gap:8px;margin-top:8px">
+<div style="background:#00ff88;color:#000;padding:10px 14px;border-radius:8px">01</div>
+<div style="background:#222;padding:10px 14px;border-radius:8px">02</div>
+<div style="background:#222;padding:10px 14px;border-radius:8px">03</div>
+<div style="background:#222;padding:10px 14px;border-radius:8px">04</div>
+<div style="background:#222;padding:10px 14px;border-radius:8px">05</div>
+<div style="background:#222;padding:10px 14px;border-radius:8px">06</div>
+</div>
+</div>
+</div>
 
-<div style="margin-top:16px"><b>For you - More Free</b></div>
-<div class="cardRow" id="more
+<!-- DOWNLOADS -->
+<div id="down" class="page" style="padding:12px"><b>Downloads</b><div style="text-align:center;padding:40px;color:#888">📦<br>Your free downloads here</div><div class="cardRow" id="forY"></div></div>
+
+<!-- ME - NO PREMIUM -->
+<div id="me" class="page">
+<div style="display:flex;gap:12px;padding:16px"><img src="https://i.pravatar.cc/100" style="width:50px;height:50px;border-radius:50%"><div><b>ATIK AL HASAN ENAM</b><br><small style="background:#222;padding:2px 8px;border-radius:6px;color:#888">ID: 240356831</small><br><small style="color:#00ff88">Free Member ✓</small></div></div>
+<div style="margin:12px;background:#1e1e1e;border-radius:12px">
+<div style="padding:12px;border-bottom:1px solid #222">🔖 My List</div>
+<div style="padding:12px;border-bottom:1px solid #222">📺 Free Movies & Web Link</div>
+<div style="padding:12px">⚙️ Settings</div>
+</div>
+</div>
+
+<div class="tab">
+<div class="on" onclick="openP('home',this)">🏠<br>Home</div>
+<div onclick="openP('search',this)">🔍<br>Search</div>
+<div onclick="openP('down',this)">⬇️<br>Downloads</div>
+<div onclick="openP('me',this)">👤<br>Me</div>
+</div>
+
+<script>
+let movies=[
+{name:"Alpha [Hindi]",img:"https://picsum.photos/200/300?11",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"hindi"},
+{name:"Welcome to the Jungle [Hindi]",img:"https://picsum.photos/200/300?12",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"hindi"},
+{name:"Bleach",img:"https://picsum.photos/200/300?13",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"anime"},
+{name:"Andhar - বাংলা",img:"https://picsum.photos/200/300?14",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"bangla"},
+{name:"Boruto: Naruto the Movie",img:"https://picsum.photos/200/300?15",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"anime"},
+{name:"Attack on Titan [Hindi]",img:"https://picsum.photos/200/300?16",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"anime"},
+{name:"Mousetrap [Hindi]",img:"https://picsum.photos/200/300?17",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"hindi"},
+{name:"My Bias, My Boss [Hindi]",img:"https://picsum.photos/200/300?18",video:"https://www.youtube.com/embed/jNQXAC9IVRw",cat:"korea"}
+];
+let saved=JSON.parse(localStorage.getItem('cine')||'[]'); movies=saved.concat(movies);
+function render(){
+ grid.innerHTML=movies.map(m=>`<div class="card" onclick="playM('${m.video}','${m.name}')"><img src="${m.img}"><p style="font-size:11px;margin-top:4px">${m.name}</p><small style="color:#00ff88">FREE</small></div>`).join('');
+ grid2.innerHTML=movies.slice(0,5).map(m=>`<div class="card" onclick="playM('${m.video}','${m.name}')"><img src="${m.img}"><p style="font-size:11px">${m.name}</p></div>`).join('');
+ forY.innerHTML=movies.slice(0,3).map(m=>`<div class="card"><img src="${m.img}" style="height:160px"><p style="font-size:11px">${m.name}</p></div>`).join('');
+ sResult.innerHTML=movies.map(m=>`<div class="list" onclick="playM('${m.video}','${m.name}')"><img src="${m.img}" style="width:70px;height:90px;border-radius:6px"><div><b>${m.name}</b><br><small style="color:#888">⭐ 8.5 | 2026 | FREE HD • No Ads</small><br><small style="background:#00ff88;color:#000;padding:2px 6px;border-radius:4px">FREE</small></div></div>`).join('');
+}
+function searchMovie(q){
+ if(!q){render();return}
+ let f=movies.filter(m=>m.name.toLowerCase().includes(q.toLowerCase())||m.cat.includes(q.toLowerCase()));
+ sResult.innerHTML=f.map(m=>`<div class="list" onclick="playM('${m.video}','${m.name}')"><img src="${m.img}" style="width:70px;height:90px;border-radius:6px"><div><b>${m.name}</b><br><small style="color:#888">FREE</small></div></div>`).join('');
+ openP('search');
+}
+function playM(link,name){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+ document.getElementById('player').classList.add('show');
+ document.getElementById('vFrame').src=link;
+ document.getElementById('vTitle').innerText=name;
+}
+function openP(id,el){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+ document.getElementById(id).classList.add('show');
+ if(el){document.querySelectorAll('.tab div').forEach(d=>d.classList.remove('on'));el.classList.add('on')}
+}
+render();
+</script>
+</body>
+</html>
